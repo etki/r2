@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+ROOT="$( dirname "$( dirname "$( readlink -f "${BASH_SOURCE[0]}}" )" )" )"
+cd "$ROOT"
+
+find_jar () {
+  find "$ROOT/build/libs" -name '*-shadow.jar' -print -quit
+}
+
+if [ -z "$( find_jar )" ]; then
+  gradle wrapper --gradle-version 4.6
+  ./gradlew shadowJar
+fi
+
+JAR="$(find_jar)"
+
+java -jar "$JAR" $@

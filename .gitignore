@@ -1,0 +1,9 @@
+# Gradle artifacts
+gradlew
+gradlew.bat
+/gradle
+/build
+.gradle
+
+# IDE settings
+.idea
