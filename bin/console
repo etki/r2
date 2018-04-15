@@ -16,4 +16,4 @@ fi
 
 JAR="$(find_jar)"
 
-java -jar "$JAR" $@
+exec java -jar "$JAR" $@
