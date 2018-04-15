@@ -3,6 +3,7 @@ plugins {
     id 'maven'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '2.0.3'
+    id 'io.franzbecker.gradle-lombok' version '1.11'
 }
 
 group = 'me.etki.tasks'
@@ -12,10 +13,16 @@ sourceCompatibility = 1.8
 
 ext {
     dropwizardVersion = '1.3.1'
+    jsonProblemVersion = '0.20.2'
 }
 
 repositories {
     mavenCentral()
+}
+
+lombok {
+    version = '1.16.20'
+    sha256 = ''
 }
 
 mainClassName = 'me.etki.tasks.r2.EntryPoint'
@@ -29,5 +36,11 @@ shadowJar {
 
 dependencies {
     compile group: 'io.dropwizard', name: 'dropwizard-core', version: dropwizardVersion
+    compile group: 'org.zalando', name: 'problem', version: jsonProblemVersion
+    compile group: 'org.zalando', name: 'jackson-datatype-problem', version: jsonProblemVersion
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
 }
