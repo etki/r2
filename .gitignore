@@ -7,3 +7,6 @@ gradlew.bat
 
 # IDE settings
 .idea
+
+# Allure downloads
+.allure

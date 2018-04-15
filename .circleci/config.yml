@@ -1,0 +1,37 @@
+parameters:
+  gradle:
+    cache_key: &gradle_cache_key gradle-{{ checksum "build.gradle" }}
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          key: *gradle_cache_key
+      - run: gradle wrapper --gradle-version 4.6
+      - run: ./gradlew test
+      - run: ./gradlew shadowJar
+      - run:
+          command: bin/console server
+          background: true
+      - run: bin/console await
+      - run: ./gradlew acceptanceTest
+      - run: ./gradlew gatlingRun
+      - run:
+          command: bin/console shutdown
+          when: always
+      - run:
+          command: ./gradlew allureReport
+          when: always
+      - save_cache:
+          paths:
+            - ~/.gradle
+            - ~/.allure
+          key: *gradle_cache_key
+      - store_artifacts:
+          path: build/reports/allure/report
+          prefix: allure
+
